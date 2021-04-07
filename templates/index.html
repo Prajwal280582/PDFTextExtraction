@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    
+
+    <title>PDF FILE TEXT EXTRACTION</title>
+
+</head>
+<body style="width:100%;height:100%;background-color:#3781C2;">
+<div>
+    <h1 align="center">PDF FILE TEXT EXTRACTION</h1>
+    
+    
+    <div style="margin-left:2%;">
+       <form action="extract" method="post" enctype="multipart/form-data" name="upload" id="frmExtract"  >
+       <div style="margin-bottom:0.5%;">
+               <label><b>Select PDF File</b></label>
+       </div>
+       
+       <div style="margin-bottom:2%;">
+        	<input type="file" name="pdfFile" accept="application/pdf" style="margin-left:0.5%" id="txtPdffile" required="true" autocomplete="off"/>
+       </div>
+ 
+       <div style="margin-bottom:1%;">
+        	<label><b>Page Number Options</b></label>
+      </div>
+ 
+       <div style="margin-bottom:1%">        	
+         	<div style="position:absolute;">
+    	         <div style="margin-bottom:0.5%;">
+                    <input type="radio" name="chkRange" id="chkRangeId" onclick="EnableDisableTextBox()" value="range" checked/>
+                    <label>Page Range:</label>
+                </div>         	
+            	<div style="position:absolute;margin-left:2%"">
+                    <input type="text" name="startRange" id="txtStartRange" pattern="[1-9.,]+" max-length="5" size="2" required="true" placeholder="From" />
+                </div>
+                <div style="margin-left:62%">
+                    <input type="text" name="endRange" id="txtEndRange" pattern="[1-9.,]+" max-length="5"  size="2" required="true" placeholder="To"/>
+                </div>       
+            </div>
+        
+            <div style="position:absolute;margin-left:12%">
+                 <label style="font-size:20px"><b>or</b></label>
+            </div>
+        
+            <div style="margin-left:16%">
+                <div>
+                    <input type="radio" name="chkRange" id="chkRandomNumberId" onclick="EnableDisableTextBox()" value="randomnumbers"/>
+                    <label>Page number list:</label>
+                </div>
+                <div  style="margin-left:2%">
+                    <input type="text" name="commaSepValues" id="txtcommaSepValues" pattern="[1-9.,]+" size="25" max-length="25" disabled="disabled" placeholder="eg: 2,5,6,8,23"/>
+                </div>
+            </div>      
+      </div>
+        
+      <div style="margin-left:9%;margin-bottom:1%;">
+           <input type="submit" name="submitFile" value="Extract PDF Text" id="submitExtractFile" onclick="openDiv()" />
+    </div>
+
+
+     <div id="dvProcessing" name="divProcessing" style="color:#800000;font-weight:bold;" >       
+     </div> 
+
+       <div id="lblMessage" style="margin-bottom:1%;font-weight:bold;">
+           <label style="color:#800000" id="messageLabel" name="messageLabel" >{{message}}</label>     
+
+      </div>
+
+    </form>
+     {% if fileSucess %}
+      <div id="btnDownlaodDiv">        
+              <a href="/savetosystem/{{downloadFle}}" target="_blank" > <button class="btn btn-default" onclick="hideDiv()"> Download </button></a>
+      </div>
+     {% endif %}  
+    </div>
+ 
+</div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    
+    function EnableDisableTextBox() 
+    {
+        var chkRange = document.getElementById("chkRangeId");
+        var txtStartRange = document.getElementById("txtStartRange");
+        var txtEndRange = document.getElementById("txtEndRange");
+        
+        txtStartRange.disabled = chkRange.checked ? false : true;
+        txtEndRange.disabled = chkRange.checked ? false : true;
+        txtcommaSepValues.disabled = chkRange.checked ? true : false;
+        
+        document.getElementById("txtStartRange").required = chkRange.checked ? false : true;
+        document.getElementById("txtEndRange").required = chkRange.checked ? false : true;
+        document.getElementById("txtcommaSepValues").required = chkRange.checked ? false : true;
+        
+        if (chkRange.checked == true)
+            {
+                document.getElementById("txtcommaSepValues").value = ""
+            }
+            else
+            {
+                document.getElementById("txtStartRange").value = ""
+                document.getElementById("txtEndRange").value = ""
+            }
+    }
+    function hideDiv()
+    {
+          var message = document.getElementById("lblMessage");
+          message.style.display = "none";
+          var downloadDiv = document.getElementById("btnDownlaodDiv");
+          downloadDiv.style.display = "none";    
+          return true;
+    } 
+    
+    function openDiv()
+    {
+         
+         var message = document.getElementById("lblMessage");
+         message.style.display = "block";
+         var messageLabel = document.getElementById("messageLabel");
+         return true;
+    }
+    
+        $(function () {
+            $("#frmExtract").submit(function () {
+                $("#dvProcessing").html("Processing...");
+        });
+    });
+
+  
+   </script>
+</body>
+</html>
